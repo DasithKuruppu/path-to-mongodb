@@ -2,6 +2,7 @@ var url = require('url');
 var debug = require('debug')('path-to-mongodb');
 var pathToRegexp = require('path-to-regexp');
 var qs = require('qs-mongodb');
+var moment = require('moment');
 
 var cache = {};
 
@@ -79,13 +80,20 @@ function formatQueryAfter(query, pathReg, pathArr) {
     } else {
       if (parseFloat(value) == value) {
         value = parseFloat(value);
-      } else {
+      } else{
+        if(moment(value, moment.ISO_8601, true).isValid()){
+          value =new Date(value);
+        }
+          else {
         if (value === 'true') {
           value = true;
         } else if (value === 'false') {
           value = false;
         }
       }
+      }
+      
+    
     }
     query[key] = value;
   });
